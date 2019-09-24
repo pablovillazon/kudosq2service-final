@@ -11,7 +11,7 @@ import java.util.Date;
 public class Kudos {
 
     @PrimaryKey
-    private ObjectId _id;
+    private ObjectId id;
     private String fuente;
     private String destino;
     private KudosTema tema;
@@ -30,9 +30,9 @@ public class Kudos {
     //Constructors
     public Kudos(){}
 
-    public Kudos(ObjectId _id, String fuente, String destino, KudosTema tema, Date fecha, String lugar, String texto)
+    public Kudos(ObjectId id, String fuente, String destino, KudosTema tema, Date fecha, String lugar, String texto)
     {
-        this._id = _id;
+        this.id = id;
         this.fuente = fuente;
         this.destino = destino;
         this.tema = tema;
@@ -43,12 +43,12 @@ public class Kudos {
 
     public void setId(ObjectId _id)
     {
-        this._id = _id;
+        this.id = _id;
     }
 
     public String getId()
     {
-        return this._id.toHexString();
+        return this.id.toHexString();
     }
 
     public String getFuente() {

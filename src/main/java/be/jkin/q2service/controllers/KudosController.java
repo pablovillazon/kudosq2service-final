@@ -3,6 +3,7 @@ package be.jkin.q2service.controllers;
 import be.jkin.q2service.model.Kudos;
 import be.jkin.q2service.model.KudosMessage;
 import be.jkin.q2service.model.MessageType;
+import be.jkin.q2service.proxy.ApiServiceBuilder;
 import be.jkin.q2service.queue.Publisher;
 import be.jkin.q2service.repository.KudosRepository;
 
@@ -13,11 +14,17 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.HttpRequestHandler;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
+
 
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 @RestController
 @RequestMapping("/api/v1")
@@ -28,8 +35,14 @@ public class KudosController {
     @Autowired
     Publisher publisher;
 
+    @Autowired
+    private RestTemplate restTemplate;
+    //ApiServiceBuilder serviceBuilder;
+
+    final String baseUri = "http://localhost:8090/api/v1/users";
+
     @GetMapping("/kudos")
-    public List<Kudos> getAllKudos()
+    public Iterable<Kudos> getAllKudos()
     {
         return kudosRepository.findAll();
     }
@@ -37,7 +50,7 @@ public class KudosController {
     @GetMapping("/kudos/{id}")
     public ResponseEntity<Kudos> getKudosById(@PathVariable(value = "id") ObjectId id) throws Exception
     {
-        Kudos kudos = kudosRepository.findBy_id(id);
+        Kudos kudos = kudosRepository.findById(id);
         return ResponseEntity.ok().body(kudos);
     }
 
@@ -45,9 +58,10 @@ public class KudosController {
     @ResponseBody
     public void getKudosSimpleList()
     {
+        /*
         List<Kudos> allKudos = kudosRepository.findAll();
 
-
+*/
 
         Gson gson = new Gson();
         String json = gson.toJson(kudosRepository.findAll());
@@ -62,8 +76,27 @@ public class KudosController {
     }
 
     @PostMapping("/kudos")
-    public Kudos createKudos(@Valid @RequestBody Kudos kudos)
-    {
+    public Kudos createKudos(@Valid @RequestBody Kudos kudos) {
+        //Validate if the Users (fuente and destino) are valid on the API Users side
+
+        String usuarioFuente = kudos.getFuente();
+        String usuarioDestino = kudos.getDestino();
+
+        //Call API Users - getUsersByNickname
+
+        try{
+            String apiResponse = restTemplate.getForObject(baseUri + "/searchBy/{nickname}", String.class, usuarioFuente);
+        } catch (RestClientException e) {
+
+        }
+
+/*
+        JsonObject jsonObject = new JsonParser().parse(secureDeleteBody).getAsJsonObject();
+        String usuarioFuente = jsonObject.get("UsuarioFuenteNickname").getAsString();
+
+*/
+
+
         @Valid Kudos newKudos = kudosRepository.save(kudos);
 
         //Send to Queue
