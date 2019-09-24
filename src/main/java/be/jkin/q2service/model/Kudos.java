@@ -1,12 +1,17 @@
 package be.jkin.q2service.model;
 
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
+
 import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 
+@Table("kudos")
 public class Kudos {
-    @Id  private ObjectId _id;
+
+    @PrimaryKey
+    private ObjectId _id;
     private String fuente;
     private String destino;
     private KudosTema tema;
