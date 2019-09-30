@@ -1,22 +1,38 @@
 package be.jkin.q2service.model;
 
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import com.datastax.driver.core.DataType;
+import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import org.springframework.data.cassandra.core.mapping.CassandraType;
+import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-import org.bson.types.ObjectId;
-
 import java.util.Date;
+import java.util.UUID;
+
 
 @Table("kudos")
 public class Kudos {
 
-    @PrimaryKey
-    private ObjectId id;
+    @PrimaryKeyColumn(name="id",ordinal = 0, type = PrimaryKeyType.PARTITIONED)
+    @CassandraType(type = DataType.Name.UUID, userTypeName = "user_type")
+    private UUID id;
+
+    @CassandraType(type = DataType.Name.VARCHAR, userTypeName = "user_type")
     private String fuente;
+
+    @CassandraType(type = DataType.Name.VARCHAR, userTypeName = "user_type")
     private String destino;
+
+    @CassandraType(type = DataType.Name.VARCHAR, userTypeName = "user_type")
     private KudosTema tema;
+
+    @CassandraType(type = DataType.Name.TIMESTAMP, userTypeName = "user_type")
     private Date fecha;
+
+    @CassandraType(type = DataType.Name.VARCHAR, userTypeName = "user_type")
     private String lugar;
+
+    @CassandraType(type = DataType.Name.VARCHAR, userTypeName = "user_type")
     private String texto;
 
     public enum KudosTema{
@@ -30,7 +46,7 @@ public class Kudos {
     //Constructors
     public Kudos(){}
 
-    public Kudos(ObjectId id, String fuente, String destino, KudosTema tema, Date fecha, String lugar, String texto)
+    public Kudos(UUID id, String fuente, String destino, KudosTema tema, Date fecha, String lugar, String texto)
     {
         this.id = id;
         this.fuente = fuente;
@@ -41,14 +57,14 @@ public class Kudos {
         this.texto = texto;
     }
 
-    public void setId(ObjectId _id)
+    public void setId(UUID _id)
     {
         this.id = _id;
     }
 
     public String getId()
     {
-        return this.id.toHexString();
+        return this.id.toString();
     }
 
     public String getFuente() {
