@@ -1,16 +1,25 @@
 package be.jkin.q2service.model;
 
 import com.datastax.driver.core.DataType;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Field;
+
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.CassandraType;
-import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.core.mapping.Table;
 
+//import org.springframework.data.cassandra.core.mapping.Indexed;
+
+import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Date;
 import java.util.UUID;
 
 
-@Table("kudos")
+@Entity
+//@Table("kudos")
+@Indexed
 public class Kudos {
 
     @PrimaryKeyColumn(name="id",ordinal = 0, type = PrimaryKeyType.PARTITIONED)
@@ -23,6 +32,7 @@ public class Kudos {
     @CassandraType(type = DataType.Name.VARCHAR, userTypeName = "user_type")
     private String destino;
 
+    @Field
     @CassandraType(type = DataType.Name.VARCHAR, userTypeName = "user_type")
     private KudosTema tema;
 
@@ -32,6 +42,7 @@ public class Kudos {
     @CassandraType(type = DataType.Name.VARCHAR, userTypeName = "user_type")
     private String lugar;
 
+    @Field
     @CassandraType(type = DataType.Name.VARCHAR, userTypeName = "user_type")
     private String texto;
 
@@ -62,6 +73,7 @@ public class Kudos {
         this.id = _id;
     }
 
+    @Id
     public String getId()
     {
         return this.id.toString();

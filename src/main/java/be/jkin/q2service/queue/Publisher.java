@@ -22,7 +22,8 @@ public class Publisher {
 
     public String SendMessageToQueue(String message)
     {
-        amqpTemplate.convertAndSend(exchange, routingKey, message);
+        //amqpTemplate.convertAndSend(exchange, routingKey, message);
+        amqpTemplate.convertAndSend(exchange, "q2-kudos-key-k2u", message);
         return "Message sent to Queue!";
     }
 }
